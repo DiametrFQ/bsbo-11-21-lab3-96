@@ -8,36 +8,36 @@ class Vertex{
     }
 }
 
-const depth = (nums, i, head) =>{
+const depth = (nums, i, head) =>{//строим дерево
 
-    if(nums[i] < +head.key){
-        if(head.leftSon.key === 0){
-            if(head.leftSon.rightSibling.key > 0){
-                head.leftSon = new Vertex(nums[i], new Vertex(0, new Vertex(0), 0, 0, new Vertex(0)), 0, 0, head.leftSon.rightSibling)
+    if(nums[i] < +head.key){ //меньше ли число данного узла
+        if(head.leftSon.key === 0){ //у нас левый сын есть?
+            if(head.leftSon.rightSibling.key > 0){//У нас нет левого сыны, а правый?
+                head.leftSon = new Vertex(nums[i], new Vertex(0, new Vertex(0), 0, 0, new Vertex(0)), 0, 0, head.leftSon.rightSibling)//Добавляем нового левого сына, и прикрепляем к нему правого
             }
             else{
-                head.leftSon = new Vertex(nums[i], new Vertex(0, new Vertex(0), 0, 0, new Vertex(0)), 0, 0, new Vertex(0, new Vertex(0), 0, 0, new Vertex(0)))
+                head.leftSon = new Vertex(nums[i], new Vertex(0, new Vertex(0), 0, 0, new Vertex(0)), 0, 0, new Vertex(0, new Vertex(0), 0, 0, new Vertex(0)))//Просто добавляем нового левого сына
             }
         }
-        else{
+        else{ //У нас есть левый сын - отправляем узел сравнивать с ним
             depth(nums, i, head.leftSon)
         }
     }
     else{
-        if(head.leftSon.rightSibling.key == undefined||head.leftSon.rightSibling.key == 0){
-            if(+head.leftSon.key == 0){
-                head.leftSon = new Vertex(0, new Vertex( 0, new Vertex(0), 0, 0, new Vertex(0)), 0, 0, new Vertex(0))
+        if(head.leftSon.rightSibling.key == undefined||head.leftSon.rightSibling.key == 0){//у нас правый сын есть?
+            if(+head.leftSon.key == 0){//А левый?
+                head.leftSon = new Vertex(0, new Vertex( 0, new Vertex(0), 0, 0, new Vertex(0)), 0, 0, new Vertex(0))//Нет левого сына - создадим пустышку, чтобы добавить через него правого
             }
-            head.leftSon.rightSibling = new Vertex(nums[i], new Vertex(0, new Vertex(0), 0, 0, new Vertex(0)), 0, 0, new Vertex(0, new Vertex(0), 0, 0, new Vertex(0)))
+            head.leftSon.rightSibling = new Vertex(nums[i], new Vertex(0, new Vertex(0), 0, 0, new Vertex(0)), 0, 0, new Vertex(0, new Vertex(0), 0, 0, new Vertex(0)))//создаем правого сына
         }
-        else{
+        else{//У нас есть правый сын - отправляем узел сравнивать с ним
             depth(nums, i, head.leftSon.rightSibling)
         }
     }
 }
 
 let newNums = ''
-const semetry = (vertex) => {
+const semetry = (vertex) => {//симметричный обход дерева
     if(vertex.leftSon.key >0){
         semetry(vertex.leftSon)
         if(vertex.leftSon.rightSibling.key >0 && vertex.leftSon.key >0){
@@ -55,7 +55,6 @@ const semetry = (vertex) => {
         newNums += vertex.key
     }
 }
-
 const straight = (vertex) => {
     if(vertex.key>0)
     {
@@ -64,7 +63,7 @@ const straight = (vertex) => {
         straight(vertex.leftSon.rightSibling)
     }
 }
-const back = (vertex) => {
+const back = (vertex) => {//обратный обход дерева
     if(vertex.key>0)
     {
         back(vertex.leftSon)
@@ -73,7 +72,7 @@ const back = (vertex) => {
     }
 }
 
-const treeToArr = (head, i, loor) => {
+const treeToArr = (head, i, loor) => {//Превратить дерево в +- красивый вывод
 
     arrayTree[ i ][ loor ] += `${head.key} `
 
@@ -89,11 +88,10 @@ const treeToArr = (head, i, loor) => {
 }
 
 let arrayTree = [[]]
-const buildTree = (nums, typeRead) => {
+const buildTree = (nums, typeRead) => {//полная постройка дерева
     newNums = ''
     let arr = [0]
     let arr2 = [0]
-    let arr3 = [0]
 
     for (let j = 1; j <= 10; j++)  arr[j] = 0    
 
@@ -107,58 +105,49 @@ const buildTree = (nums, typeRead) => {
             break
         }
         arr2[i] = arr.indexOf(Math.max.apply(null, arr))
-        arr3[i] = arr[arr.indexOf(Math.max.apply(null, arr)) ]
 
         arr[arr.indexOf(Math.max.apply(null, arr)) ] = 0
     }
     
-    let root = new Vertex(+arr2[0], new Vertex(0, new Vertex(0), 0, 0, 0, new Vertex(0)), 0, 0, 0)
+    let root = new Vertex(+arr2[0], new Vertex(0, new Vertex(0), 0, 0, 0, new Vertex(0)), 0, 0, 0)// создаем корень
 
     for (let i = 1; i < arr2.length; i++) {
-        depth(arr2,i, root)
+        depth(arr2,i, root)// создаем дерево
     }
-
     for (let i = 0; i < arr2.length; i++) {
         arrayTree[i] = [['']]
     }
     
-    treeToArr(root, 0, 0, 0)
+    treeToArr(root, 0, 0, 0)// вывод дерева в консоль
 
-    typeRead(root)
+    typeRead(root)// чтение дерева
 
-    return [newNums, arr2, arr3]
+    return [newNums, arr2]
 }
 
-let A = '44673543'
-let B = '1277685555555555555555533333333333334444444'
-let C = ''
+let A = '4318' //значения дерева А
+let B = '23456'//значения дерева B
 
-let [A_read, A_vertexes, A_price] = buildTree(A, back)
-let [B_read, B_vertexes, B_price] = buildTree(B, semetry)
+let [A_read, A_vertexes] = buildTree(A, back)
+let [B_read, B_vertexes] = buildTree(B, semetry) 
 
-for (let i = 0; i < A_vertexes.length; i++) {
-
-    for(let j = 0; j < A_price[i]; j++){
-        C+=A_vertexes[i]
-    } 
-}
-for (let i = 0; i < B_vertexes.length; i++) {
-
-    for(let j = 0; j < B_price[i]; j++){
-        C+=B_vertexes[i]
+//Операция А = A \ B означает, что из дерева А исключаются узлы, присутствующие в дереве В
+for(let j = 0; j < B.length; j++){
+    if( A.includes(B[j]) ){
+        A = A.replace(B[j], '')
     }
 }
-let [C_read, C_vertexes, C_price] = buildTree(C, straight)
+arrayTree = [[]]
 
-WAH = 0
+let [A_read2, A_vertexes2] = buildTree(A, straight)
 
-for (let i = 0; i < C_vertexes.length; i++) {
-
-    WAH += C_read[i] * C_vertexes[i]
-}
-
-console.log("Cредневзвешенная высота "+ WAH)
-console.log("C "+ C)
-
-console.log(C_read, C_vertexes, C_price)
+console.log("A "+ A)
+console.log(A_read2, A_vertexes2)
 console.log(arrayTree)
+
+// let tree = '333337777999224'
+
+// let [tree_read, tree_vertexes, tree_price] = buildTree(tree, semetry)
+
+// console.log(tree_read, tree_vertexes, tree_price)
+// console.log(arrayTree)
